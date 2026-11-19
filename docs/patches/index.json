@@ -49,13 +49,13 @@
         "version": "1.40"
       },
       "release": {
-        "name": "705E140_20261119v8",
-        "patch_file": "705E140_20261119v8.json",
-        "patch_sha256": "887d4d9b571832d30d6bf02a18eb2d9fde6d92d6a772b8b83e3c7bc587d21613",
-        "label": "20261119v8",
+        "name": "705E140_20261119v9",
+        "patch_file": "705E140_20261119v9.json",
+        "patch_sha256": "0b3dac51d2c791ca69f0509aa27823fe738700c8664585e75bc7468db5bfaa4e",
+        "label": "20261119v9",
         "date": "2026-11-19",
-        "title": "IC-705 E 1.40 + transverter + ICAP decoders, on-radio beacon & PSKReporter (20261119v8)",
-        "description": "IC-705 E1.40 custom 20261119v8 (ICAP: decoders, on-radio beacon with red frame, working PSKReporter)",
+        "title": "IC-705 E 1.40 + transverter + ICAP decoders, on-radio beacon & PSKReporter, Bluetooth DATA MOD (20261119v9)",
+        "description": "IC-705 E1.40 custom 20261119v9 (v8 + Bluetooth audio as DATA MOD / DATA OFF MOD source: \"USB, BT\", \"BT\")",
         "features": [
           "Transverter support: 8 slots (TRV1\u2013TRV8, RF / IF), RF shown on the display up to 122 GHz",
           "CI-V frequency read/write in RF terms",
@@ -68,10 +68,11 @@
           "SD-card decoder apps (ICAP): Q65, FT8, JT4 and PI4 on the DECODE screen, WSJT-X-style output; WSPR-2 as a beacon-only app",
           "Automatic PSKReporter spotting (fixed in this release - earlier releases never actually sent): every decode is reported when your own callsign and locator are set on the radio and it has network (the firmware carries no personal data; spot frequency is the true on-air RF, transverter-aware)",
           "On-radio beacon: in a decoder mode, a LONG press of the mode tile in the emission popup arms / disarms a period-aligned beacon (DE <call> <locator>); while armed, a red rounded frame marks the main-screen emission button",
+          "DATA MOD / DATA OFF MOD: new 'USB, BT' and 'BT' options send Bluetooth (HFP) audio to the modulator, so a PC can run digital modes over Bluetooth with CI-V PTT (no VOX)",
           "Download the matching SD-apps bundle 20261119v8 on the patcher page and copy it to the radio's \\Apps\\ folder (the .BIN files must come from the same bundle)"
         ],
-        "output_md5": "629dff4d1ab8c721ec7c2755633db2f5",
-        "output_main_md5": "13b956a2b958be7ccfa51f4011584616",
+        "output_md5": "67bbe5f3926c67e3c30a4af296b8cac9",
+        "output_main_md5": "b7d5e09dad772984e942db07a19ec8b8",
         "bootloader": true,
         "tx_outside_amateur_bands": true
       }

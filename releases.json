@@ -41,10 +41,10 @@
     "region": "E",
     "version": "1.40"
    },
-   "patch": "705E140_20261119v8.json",
-   "release": "20261119v8",
+   "patch": "705E140_20261119v9.json",
+   "release": "20261119v9",
    "date": "2026-11-19",
-   "title": "IC-705 E 1.40 + transverter + ICAP decoders, on-radio beacon & PSKReporter (20261119v8)",
+   "title": "IC-705 E 1.40 + transverter + ICAP decoders, on-radio beacon & PSKReporter, Bluetooth DATA MOD (20261119v9)",
    "features": [
     "Transverter support: 8 slots (TRV1\u2013TRV8, RF / IF), RF shown on the display up to 122 GHz",
     "CI-V frequency read/write in RF terms",
@@ -57,6 +57,7 @@
     "SD-card decoder apps (ICAP): Q65, FT8, JT4 and PI4 on the DECODE screen, WSJT-X-style output; WSPR-2 as a beacon-only app",
     "Automatic PSKReporter spotting (fixed in this release - earlier releases never actually sent): every decode is reported when your own callsign and locator are set on the radio and it has network (the firmware carries no personal data; spot frequency is the true on-air RF, transverter-aware)",
     "On-radio beacon: in a decoder mode, a LONG press of the mode tile in the emission popup arms / disarms a period-aligned beacon (DE <call> <locator>); while armed, a red rounded frame marks the main-screen emission button",
+    "DATA MOD / DATA OFF MOD: new 'USB, BT' and 'BT' options send Bluetooth (HFP) audio to the modulator, so a PC can run digital modes over Bluetooth with CI-V PTT (no VOX)",
     "Download the matching SD-apps bundle 20261119v8 on the patcher page and copy it to the radio's \\Apps\\ folder (the .BIN files must come from the same bundle)"
    ],
    "status": "active",

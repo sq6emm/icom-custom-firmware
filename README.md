@@ -19,7 +19,7 @@ latest release.
 | Official file | Release | Output MD5 |
 |---|---|---|
 | IC-9700 `9700E150.dat` (`6f04fd2248ba39254ed01b30b52ce36a`) | 20261119v6 (SD apps 20261119v8) — TRV per MAIN/SUB (DUAL, SAT), scope dB/div, A/B bootloader, ICAP decoders (Q65/FT8/JT4/PI4/WSPR), on-radio beacon, working PSKReporter | `2b4fa5295e4a9323baf0ff9b023755f2` |
-| IC-705 `705E140.dat` (`2c9c1d7f3fc80ef173e01d841cd1248a`) | 20261119v8 — TRV, scope dB/div, A/B bootloader, extended TX ranges, ICAP decoders, on-radio beacon, working PSKReporter | `629dff4d1ab8c721ec7c2755633db2f5` |
+| IC-705 `705E140.dat` (`2c9c1d7f3fc80ef173e01d841cd1248a`) | 20261119v9 — TRV, scope dB/div, A/B bootloader, extended TX ranges, ICAP decoders, on-radio beacon, working PSKReporter, Bluetooth DATA MOD | `67bbe5f3926c67e3c30a4af296b8cac9` |
 | IC-705 `705J140.dat` (`b605171288db4a74e0992a8f2afcb1c3`) | 20261113v1 — TRV, scope dB/div, A/B bootloader, extended TX ranges | `d7a7f87b9b16f262b188fe3735b3682b` |
 
 The IC-705 releases extend the TX frequency ranges beyond the amateur bands. You alone are
