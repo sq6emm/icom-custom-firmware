@@ -39,11 +39,17 @@ Transverter support (`TRV1-TRV8`, RF display up to 122 GHz, CI-V frequency trans
 
 No Icom firmware is distributed here. You download the official `.dat` from Icom yourself; the patcher (running locally in your browser or via Python CLI) applies the patch and writes the result **only if its MD5 is byte-identical to the tested build**. There is always one current release per official file.
 
-| Radio | Official Input (`.dat` & MD5) | Release & SD Apps | Patched Output MD5 | Key Highlights |
-|---|---|---|---|---|
-| **IC-9700 (E)** | `9700E150.dat`<br>`6f04fd2248ba39254ed01b30b52ce36a` | `20261119v14`<br>([ICAP-apps-9700](docs/apps/ICAP-apps-9700-20261119v14.zip)) | `348d1d6118c94e05df0b3027f2dbd103` | TRV per MAIN/SUB (DUAL, SAT) with ATT / P.AMP, scope dB/div, A/B bootloader, ICAP decoders, beacon, QSO mode, APRS GPS TX, PSKReporter |
-| **IC-705 (E)** | `705E140.dat`<br>`2c9c1d7f3fc80ef173e01d841cd1248a` | `20261119v14`<br>([ICAP-apps-705E](docs/apps/ICAP-apps-705E-20261119v14.zip)) | `70af0dea75a3b6cc3c555cbe35d21c36` | TRV with per-slot ATT / P.AMP, scope dB/div, A/B bootloader, extended TX ranges (incl. 4 m), ICAP decoders, beacon, QSO mode, APRS GPS TX, PSKReporter |
-| **IC-705 (J)** | `705J140.dat`<br>`b605171288db4a74e0992a8f2afcb1c3` | `20261119v14`<br>([ICAP-apps-705J](docs/apps/ICAP-apps-705J-20261119v14.zip)) | `1084dcdc5180e561394a50759725f04a` | Same features as E; verified on IC-705 J (HF TX unlocked and verified; 2 m / 70 cm TX stays within the Japanese band plan due to hardware limit above 146.000 MHz) |
+| Radio | Official Input | Release & SD Apps | Patched Output MD5 |
+|---|---|---|---|
+| **IC-9700 (E)** | `9700E150.dat`<br>`6f04fd2248ba39254ed01b30b52ce36a` | [`20261119v14`](patches/9700E150_20261119v14.json)<br>[ICAP-apps-9700](docs/apps/ICAP-apps-9700-20261119v14.zip) | `348d1d6118c94e05df0b3027f2dbd103` |
+| **IC-705 (E)** | `705E140.dat`<br>`2c9c1d7f3fc80ef173e01d841cd1248a` | [`20261119v14`](patches/705E140_20261119v14.json)<br>[ICAP-apps-705E](docs/apps/ICAP-apps-705E-20261119v14.zip) | `70af0dea75a3b6cc3c555cbe35d21c36` |
+| **IC-705 (J)** | `705J140.dat`<br>`b605171288db4a74e0992a8f2afcb1c3` | [`20261119v14`](patches/705J140_20261119v14.json)<br>[ICAP-apps-705J](docs/apps/ICAP-apps-705J-20261119v14.zip) | `1084dcdc5180e561394a50759725f04a` |
+
+**Per-radio highlights (`20261119v14`):**
+
+- **IC-9700 (E):** Transverters per `MAIN` / `SUB` (`DUAL`, `SAT`) with per-transverter `ATT` / `P.AMP`, `Scope dB/div`, A/B bootloader, ICAP decoders (`Q65`, `FT8`, `JT4`, `PI4`, `WSPR`), beacon, QSO mode, APRS GPS TX mode, and PSKReporter.
+- **IC-705 (E):** Transverters with per-slot `ATT` / `P.AMP`, `Scope dB/div`, A/B bootloader, extended TX ranges (including 4 m), ICAP decoders, beacon, QSO mode, APRS GPS TX mode, and PSKReporter.
+- **IC-705 (J):** Same features as E, confirmed on an IC-705 J. HF TX is unlocked and verified; 2 m / 70 cm TX stays within the Japanese band plan due to a hardware limit (no output above 146.000 MHz).
 
 > [!WARNING]
 > The IC-705 releases extend the TX frequency ranges beyond the amateur bands. You alone are responsible for transmitting only where your licence and national regulations allow.
