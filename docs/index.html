@@ -9,20 +9,28 @@
 <title>Icom Firmware Patcher</title>
 <meta name="description" content="Build a tested IC-705 / IC-9700 transverter firmware from your own official Icom firmware file, entirely in your browser.">
 <link rel="stylesheet" href="style.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23255fa8'/%3E%3Cpath d='M4 11V5h2l2 3 2-3h2v6' stroke='white' stroke-width='1.6' fill='none'/%3E%3C/svg%3E">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <script type="module" src="js/app.js"></script>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <h1>Icom firmware patcher</h1>
-      <p class="sub">IC-705 / IC-9700 &mdash; build a tested firmware from <em>your own</em> official Icom file, in your browser.</p>
+      <img src="assets/logo.svg" alt="" class="logo" width="44" height="44">
+      <div class="brand-text">
+        <h1>Icom firmware patcher</h1>
+        <p class="sub">IC-705 / IC-9700: build a tested firmware from <em>your own</em> official Icom file, in your browser.</p>
+      </div>
     </div>
-    <nav class="links">
-      <a href="https://mikrofale.cafe/showthread.php?tid=1296" rel="noopener noreferrer" target="_blank">Discussion forum</a>
-      <a href="https://github.com/sq6emm/icom-custom-firmware#readme" rel="noopener">Project README</a>
-      <a id="translate" href="https://translate.google.com/" rel="noopener noreferrer" target="_blank">Translate this page</a>
+    <nav class="links" aria-label="Page navigation">
+      <a href="#step1-h">Patcher</a>
+      <a href="#sup-h">Supported files</a>
+      <a href="#apps-h">SD-card apps</a>
+      <a href="#how-h">How it works</a>
+      <a href="https://mikrofale.cafe/showthread.php?tid=1296" rel="noopener noreferrer" target="_blank">Forum</a>
+      <a href="https://github.com/sq6emm/icom-custom-firmware#readme" rel="noopener">README</a>
+      <a id="translate" href="https://translate.google.com/" rel="noopener noreferrer" target="_blank">Translate</a>
+      <button id="theme-toggle" type="button" class="theme-btn" aria-label="Toggle light or dark theme" title="Toggle light/dark theme">Theme</button>
     </nav>
   </div>
 </header>
@@ -41,13 +49,86 @@
     </ul>
   </section>
 
-  <section class="card about" aria-labelledby="about-h">
-    <h2 id="about-h">About this firmware</h2>
+  <section class="card" aria-labelledby="step1-h">
+    <h2 id="step1-h"><span class="step">1</span> Choose your official firmware file</h2>
+    <p class="muted">Download the firmware from Icom's website yourself, unzip it, and select the <code>.dat</code> file here.</p>
+    <label id="drop" class="drop" tabindex="0">
+      <input id="file" type="file" accept=".dat,application/octet-stream">
+      <span class="drop-main">Drop the <code>.dat</code> file here or <u>browse</u></span>
+      <span class="drop-hint">The file is read locally and never uploaded.</span>
+    </label>
+    <div id="fileinfo" class="fileinfo" hidden>
+      <dl>
+        <dt>File</dt><dd id="fi-name"></dd>
+        <dt>Size</dt><dd id="fi-size"></dd>
+        <dt>MD5</dt><dd class="hash-row"><code id="fi-md5" class="hash">computing&hellip;</code><button type="button" class="copy-btn" data-copy-target="fi-md5" hidden>Copy</button></dd>
+      </dl>
+      <div id="fi-status" class="status"></div>
+    </div>
+  </section>
+
+  <section id="release" class="card" aria-labelledby="step2-h" hidden>
+    <h2 id="step2-h"><span class="step">2</span> Release for this file</h2>
+    <div class="rel-head">
+      <div>
+        <h3 id="rel-title"></h3>
+        <p class="muted" id="rel-meta"></p>
+      </div>
+      <div class="badges" id="rel-badges"></div>
+    </div>
+    <ul id="rel-features" class="features"></ul>
+    <dl class="kv">
+      <dt>Input</dt><dd class="hash-row"><span id="rel-in"></span> <code id="rel-in-md5" class="hash"></code><button type="button" class="copy-btn" data-copy-target="rel-in-md5">Copy</button></dd>
+      <dt>Expected output MD5</dt><dd class="hash-row"><code id="rel-out-md5" class="hash"></code><button type="button" class="copy-btn" data-copy-target="rel-out-md5">Copy</button></dd>
+      <dt id="rel-apps-dt" hidden>Matching SD apps</dt><dd id="rel-apps" hidden></dd>
+    </dl>
+
+    <div id="warn-wb" class="notice danger" hidden>
+      <h4>Transmission outside the amateur bands</h4>
+      <p>This release <strong>enables transmission outside the amateur radio bands</strong>. You alone are
+      responsible for transmitting only on frequencies, with powers and in modes that your licence and your
+      national regulations allow. Unlicensed or out-of-band transmission may be illegal and can interfere
+      with other services.</p>
+    </div>
+
+    <div id="warn-boot" class="notice warn" hidden>
+      <h4>Includes the custom A/B bootloader</h4>
+      <p>Besides the main firmware, this release replaces the radio's small boot loader (the first 64 KiB of
+      flash) with a custom A/B slot-toggle bootloader. The radio's own SD-card updater writes it
+      <strong>once</strong>, when the update starts. The boot loader exists in a single copy: <strong>if power is
+      lost during that write, the radio will not start and can only be recovered with an external flash
+      programmer</strong> (e.g. CH341A, chip desoldered or clipped). Use a reliable power supply and do not
+      interrupt the update.</p>
+      <p>The firmware keeps two slots (A and B), as Icom's updater already alternates between them. The
+      custom bootloader lets you switch to the other slot (e.g. back to the previous firmware):</p>
+      <ul>
+        <li><strong>IC-9700:</strong> hold <kbd>POWER</kbd> while connecting the DC supply, for about 5 seconds.</li>
+        <li><strong>IC-705:</strong> at power-on keep holding <kbd>POWER</kbd> for about 3 seconds more, until the LED blinks.</li>
+      </ul>
+      <p>Installing any official Icom firmware afterwards restores Icom's own boot loader.</p>
+    </div>
+
+    <label class="accept"><input type="checkbox" id="accept"> I have read the notes above, I use this at my own risk, and I will check TX delay and power on a dummy load before connecting a transverter.</label>
+    <div class="actions">
+      <button id="build" type="button" class="primary" disabled>Build &amp; download</button>
+      <span id="build-hint" class="muted small">Tick the box to enable.</span>
+    </div>
+
+    <div id="progress" class="progress" hidden>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="bar"></span></div>
+      <div class="prog-line"><span id="stage">Starting&hellip;</span><span id="elapsed" class="muted"></span></div>
+    </div>
+    <div id="result" class="status" hidden></div>
+  </section>
+
+  <details class="card about" aria-labelledby="about-h">
+    <summary id="about-h">About this firmware (transverter support, scope dB/div, A/B bootloader, extended TX)</summary>
+    <div class="about-body">
     <p>These releases are built for <strong>microwave transverter operation</strong>: the radio works as the IF rig for an
       external transverter (for example 10, 24, 47, 76 or 122 GHz). It shows and reports the real microwave frequency, and it
       can adapt its transmit behaviour to each transverter.</p>
 
-    <h3>Transverter support (TRV1&ndash;TRV8)</h3>
+    <h3>Transverter support (TRV1-TRV8)</h3>
     <ul>
       <li>Up to eight transverters. For each one you set the RF frequency (on the microwave band) and the IF frequency (the
         band the radio actually tunes). Select the active transverter in the radio's menu; the settings are kept after power-off.</li>
@@ -104,78 +185,8 @@
 
     <h3>Before you connect a transverter</h3>
     <p>On a dummy load, measure the SEND-to-RF delay (with a scope) and the output power for every transverter slot you plan to use.</p>
-  </section>
-
-  <section class="card" aria-labelledby="step1-h">
-    <h2 id="step1-h"><span class="step">1</span> Choose your official firmware file</h2>
-    <p class="muted">Download the firmware from Icom's website yourself, unzip it, and select the <code>.dat</code> file here.</p>
-    <label id="drop" class="drop" tabindex="0">
-      <input id="file" type="file" accept=".dat,application/octet-stream">
-      <span class="drop-main">Drop the <code>.dat</code> file here or <u>browse</u></span>
-      <span class="drop-hint">The file is read locally and never uploaded.</span>
-    </label>
-    <div id="fileinfo" class="fileinfo" hidden>
-      <dl>
-        <dt>File</dt><dd id="fi-name"></dd>
-        <dt>Size</dt><dd id="fi-size"></dd>
-        <dt>MD5</dt><dd><code id="fi-md5" class="hash">computing&hellip;</code></dd>
-      </dl>
-      <div id="fi-status" class="status"></div>
     </div>
-  </section>
-
-  <section id="release" class="card" aria-labelledby="step2-h" hidden>
-    <h2 id="step2-h"><span class="step">2</span> Release for this file</h2>
-    <div class="rel-head">
-      <div>
-        <h3 id="rel-title"></h3>
-        <p class="muted" id="rel-meta"></p>
-      </div>
-      <div class="badges" id="rel-badges"></div>
-    </div>
-    <ul id="rel-features" class="features"></ul>
-    <dl class="kv">
-      <dt>Input</dt><dd><span id="rel-in"></span> <code id="rel-in-md5" class="hash"></code></dd>
-      <dt>Expected output MD5</dt><dd><code id="rel-out-md5" class="hash"></code></dd>
-    </dl>
-
-    <div id="warn-wb" class="notice danger" hidden>
-      <h4>Transmission outside the amateur bands</h4>
-      <p>This release <strong>enables transmission outside the amateur radio bands</strong>. You alone are
-      responsible for transmitting only on frequencies, with powers and in modes that your licence and your
-      national regulations allow. Unlicensed or out-of-band transmission may be illegal and can interfere
-      with other services.</p>
-    </div>
-
-    <div id="warn-boot" class="notice warn" hidden>
-      <h4>Includes the custom A/B bootloader</h4>
-      <p>Besides the main firmware, this release replaces the radio's small boot loader (the first 64 KiB of
-      flash) with a custom A/B slot-toggle bootloader. The radio's own SD-card updater writes it
-      <strong>once</strong>, when the update starts. The boot loader exists in a single copy: <strong>if power is
-      lost during that write, the radio will not start and can only be recovered with an external flash
-      programmer</strong> (e.g. CH341A, chip desoldered or clipped). Use a reliable power supply and do not
-      interrupt the update.</p>
-      <p>The firmware keeps two slots (A and B), as Icom's updater already alternates between them. The
-      custom bootloader lets you switch to the other slot (e.g. back to the previous firmware):</p>
-      <ul>
-        <li><strong>IC-9700:</strong> hold <kbd>POWER</kbd> while connecting the DC supply, for about 5 seconds.</li>
-        <li><strong>IC-705:</strong> at power-on keep holding <kbd>POWER</kbd> for about 3 seconds more, until the LED blinks.</li>
-      </ul>
-      <p>Installing any official Icom firmware afterwards restores Icom's own boot loader.</p>
-    </div>
-
-    <label class="accept"><input type="checkbox" id="accept"> I have read the notes above, I use this at my own risk, and I will check TX delay and power on a dummy load before connecting a transverter.</label>
-    <div class="actions">
-      <button id="build" type="button" class="primary" disabled>Build &amp; download</button>
-      <span id="build-hint" class="muted small">Tick the box to enable.</span>
-    </div>
-
-    <div id="progress" class="progress" hidden>
-      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="bar"></span></div>
-      <div class="prog-line"><span id="stage">Starting&hellip;</span><span id="elapsed" class="muted"></span></div>
-    </div>
-    <div id="result" class="status" hidden></div>
-  </section>
+  </details>
 
   <section class="card" aria-labelledby="sup-h">
     <h2 id="sup-h">Supported official files</h2>

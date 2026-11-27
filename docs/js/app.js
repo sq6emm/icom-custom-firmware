@@ -18,6 +18,7 @@ let current = null;        // matching index entry
 let worker = null;
 let jobId = 0;
 let busy = false;
+let lastDownloadUrl = null;
 
 function getWorker() {
   if (!worker) worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
@@ -91,6 +92,7 @@ async function onFile(file) {
   $('fi-name').textContent = file.name;
   $('fi-size').textContent = fmtSize(file.size);
   $('fi-md5').textContent = 'computing…';
+  document.querySelectorAll('.copy-btn[data-copy-target="fi-md5"]').forEach((b) => { b.hidden = true; });
   $('fi-status').hidden = true;
   if (file.size > 64 * 1048576) {
     setStatus($('fi-status'), 'err', 'Not an Icom firmware file', 'The file is far too large.');
@@ -101,6 +103,7 @@ async function onFile(file) {
     const { md5 } = await runWorker({ type: 'md5', buf: fileBuf.slice(0) });
     if (file.name !== fileName) return;
     $('fi-md5').textContent = md5;
+    document.querySelectorAll('.copy-btn[data-copy-target="fi-md5"]').forEach((b) => { b.hidden = false; });
     await indexReady;
     const entry = index && index.releases.find((e) => e.input.md5 === md5);
     if (!entry) {
@@ -130,6 +133,21 @@ function showRelease(entry) {
   $('rel-in').textContent = entry.input.file;
   $('rel-in-md5').textContent = entry.input.md5;
   $('rel-out-md5').textContent = r.output_md5;
+  const appsEl = $('rel-apps');
+  const appsDt = $('rel-apps-dt');
+  appsEl.replaceChildren();
+  if (r.apps_bundle && r.apps_bundle.path) {
+    appsEl.append(
+      el('a', { href: r.apps_bundle.path, download: '' }, r.apps_bundle.file),
+      ' ',
+      el('span', { class: 'muted small' }, `(SHA-256: ${r.apps_bundle.sha256.slice(0, 12)}...)`)
+    );
+    appsEl.hidden = false;
+    appsDt.hidden = false;
+  } else {
+    appsEl.hidden = true;
+    appsDt.hidden = true;
+  }
   $('warn-boot').hidden = !r.bootloader;
   $('warn-wb').hidden = !r.tx_outside_amateur_bands;
   $('release').hidden = false;
@@ -161,11 +179,17 @@ async function build() {
     if (res.md5 !== current.release.output_md5) throw { code: 'output_mismatch', message: 'unexpected output MD5 ' + res.md5 };
     showProgress('done', 1);
     const name = current.release.name + '.dat';
+    if (lastDownloadUrl) URL.revokeObjectURL(lastDownloadUrl);
     const url = URL.createObjectURL(new Blob([res.out], { type: 'application/octet-stream' }));
+    lastDownloadUrl = url;
     const a = el('a', { href: url, download: name, class: 'button primary' }, 'Download ' + name);
-    const box = $('result'); setStatus(box, 'ok', `Built in ${secs} s — output MD5 ${res.md5} matches the tested build.`);
-    box.append(el('div', { class: 'actions' }, a));
-    box.append(el('p', { class: 'muted small' }, 'Install it with Icom\'s normal SD-card firmware update procedure. Keep the official file as well — re-installing it returns the radio to stock firmware.'));
+    const box = $('result'); setStatus(box, 'ok', `Built in ${secs} s - output MD5 ${res.md5} matches the tested build.`);
+    const acts = el('div', { class: 'actions' }, a);
+    if (current.release.apps_bundle && current.release.apps_bundle.path) {
+      acts.append(el('a', { href: current.release.apps_bundle.path, download: '', class: 'button' }, 'Download matching SD apps'));
+    }
+    box.append(acts);
+    box.append(el('p', { class: 'muted small' }, 'Install it with Icom\'s normal SD-card firmware update procedure. Keep the official file as well - re-installing it returns the radio to stock firmware.'));
     a.click();
   } catch (e) {
     const msgs = {
@@ -198,3 +222,35 @@ window.addEventListener('dragover', (e) => e.preventDefault());
 window.addEventListener('drop', (e) => e.preventDefault());
 $('accept').addEventListener('change', updateBuildButton);
 $('build').addEventListener('click', build);
+
+document.querySelectorAll('.copy-btn').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const target = $(btn.dataset.copyTarget);
+    const val = target ? target.textContent.trim() : '';
+    if (!val) return;
+    try {
+      await navigator.clipboard.writeText(val);
+      const prev = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = prev; }, 1400);
+    } catch {
+      btn.textContent = 'Failed';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1400);
+    }
+  });
+});
+
+function initThemeToggle() {
+  const btn = $('theme-toggle');
+  if (!btn) return;
+  const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  let theme = mq && mq.matches ? 'dark' : 'light';
+  const syncLabel = () => { btn.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme'; };
+  syncLabel();
+  btn.addEventListener('click', () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = theme;
+    syncLabel();
+  });
+}
+initThemeToggle();

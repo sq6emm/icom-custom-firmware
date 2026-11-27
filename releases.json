@@ -10,6 +10,7 @@
     "version": "1.50"
    },
    "patch": "9700E150_20261119v14.json",
+   "apps_bundle": "ICAP-apps-9700-20261119v14.zip",
    "release": "20261119v14",
    "date": "2026-11-20",
    "title": "IC-9700 E 1.50 + transverter + ICAP decoders, beacon, QSO mode, APRS & PSKReporter (20261119v14)",
@@ -50,6 +51,7 @@
     "version": "1.40"
    },
    "patch": "705E140_20261119v14.json",
+   "apps_bundle": "ICAP-apps-705E-20261119v14.zip",
    "release": "20261119v14",
    "date": "2026-11-20",
    "title": "IC-705 E 1.40 + transverter + ICAP decoders, beacon, QSO mode, APRS & PSKReporter (20261119v14)",
@@ -88,6 +90,7 @@
     "version": "1.40"
    },
    "patch": "705J140_20261119v14.json",
+   "apps_bundle": "ICAP-apps-705J-20261119v14.zip",
    "release": "20261119v14",
    "date": "2026-11-20",
    "title": "IC-705 J 1.40 + transverter + ICAP decoders, beacon, QSO mode, APRS & PSKReporter (20261119v14)",

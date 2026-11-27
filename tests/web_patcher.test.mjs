@@ -9,6 +9,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -143,6 +144,12 @@ test('docs/patches/index.json: one release per input, patch files present and ma
     assert.equal(p.input.md5, e.input.md5);
     assert.equal(p.output.md5, e.release.output_md5);
     assert.equal(e.release.bootloader, 'bootstrap' in p);
+    if (e.release.apps_bundle) {
+      const bPath = join(ROOT, 'docs', e.release.apps_bundle.path);
+      assert.ok(existsSync(bPath), 'missing apps bundle ' + bPath);
+      const sha = createHash('sha256').update(readFileSync(bPath)).digest('hex');
+      assert.equal(sha, e.release.apps_bundle.sha256);
+    }
   }
   for (const f of readdirSync(join(ROOT, 'docs/patches'))) {
     if (f !== 'index.json') assert.ok(idx.releases.some((e) => e.release.patch_file === f), 'unreferenced ' + f);

@@ -45,7 +45,13 @@
         "output_md5": "348d1d6118c94e05df0b3027f2dbd103",
         "output_main_md5": "1c7b9b36acc1d85f7e3a29c063afc4bf",
         "bootloader": true,
-        "tx_outside_amateur_bands": false
+        "tx_outside_amateur_bands": false,
+        "apps_bundle": {
+          "file": "ICAP-apps-9700-20261119v14.zip",
+          "path": "apps/ICAP-apps-9700-20261119v14.zip",
+          "sha256": "aab67ebeb98333a5a05cf41cfc335a82446a547af07a3d61200f9eeac77eaadf",
+          "size": 241483
+        }
       }
     },
     {
@@ -90,7 +96,13 @@
         "output_md5": "70af0dea75a3b6cc3c555cbe35d21c36",
         "output_main_md5": "290c76af32ecc54c23aa0b9a0aa797a3",
         "bootloader": true,
-        "tx_outside_amateur_bands": true
+        "tx_outside_amateur_bands": true,
+        "apps_bundle": {
+          "file": "ICAP-apps-705E-20261119v14.zip",
+          "path": "apps/ICAP-apps-705E-20261119v14.zip",
+          "sha256": "2065a2667aa3b5eea2d5c58a52b0b7a97260fd59f65b98135a8f174bc378422d",
+          "size": 219944
+        }
       }
     },
     {
@@ -136,7 +148,13 @@
         "output_md5": "1084dcdc5180e561394a50759725f04a",
         "output_main_md5": "2958ebcae6ad874f3570a06c80cec08d",
         "bootloader": true,
-        "tx_outside_amateur_bands": true
+        "tx_outside_amateur_bands": true,
+        "apps_bundle": {
+          "file": "ICAP-apps-705J-20261119v14.zip",
+          "path": "apps/ICAP-apps-705J-20261119v14.zip",
+          "sha256": "0e844de4328259a7d8d64306cae779ed0e7d70e6cc4d8dc2df0a1ee68a87ad48",
+          "size": 213092
+        }
       }
     }
   ]
