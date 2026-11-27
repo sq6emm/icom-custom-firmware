@@ -52,6 +52,23 @@ def main():
             for key in ("name", "ops", "output"):
                 if key not in p:
                     fail("%s: missing '%s'" % (r["patch"], key))
+            apps_info = None
+            if r.get("apps_bundle"):
+                bundle_name = r["apps_bundle"]
+                bundle_path = ROOT / "docs" / "apps" / bundle_name
+                if not bundle_path.is_file():
+                    if status == "pending":
+                        print("pending (apps bundle not built yet): %s -> %s" % (inp["file"], bundle_name))
+                    else:
+                        fail("apps bundle not found: %s" % bundle_path)
+                else:
+                    apps_bytes = bundle_path.read_bytes()
+                    apps_info = {
+                        "file": bundle_name,
+                        "path": "apps/" + bundle_name,
+                        "sha256": hashlib.sha256(apps_bytes).hexdigest(),
+                        "size": len(apps_bytes),
+                    }
             entry["release"] = {
                 "name": p["name"],
                 "patch_file": r["patch"],
@@ -65,6 +82,7 @@ def main():
                 "output_main_md5": p["output"]["main_md5"],
                 "bootloader": "bootstrap" in p,
                 "tx_outside_amateur_bands": bool(r.get("tx_outside_amateur_bands", False)),
+                "apps_bundle": apps_info,
             }
             if status == "pending":
                 print("pending (not published): %s -> %s" % (inp["file"], r["patch"]))

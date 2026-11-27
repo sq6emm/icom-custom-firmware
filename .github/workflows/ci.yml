@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run JavaScript tests
+        run: node --test tests/
+      - name: Run Python unit tests
+        run: python3 -m unittest discover -s tests
+      - name: Syntax check Python tools
+        run: python3 -m py_compile icom_patch.py icom_rza1_decode.py ic_rza1_repack.py tools/build_index.py
+      - name: Verify docs/patches index is up to date
+        run: |
+          python3 tools/build_index.py
+          git diff --exit-code docs/patches/
